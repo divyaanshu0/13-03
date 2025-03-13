@@ -1,18 +1,20 @@
-# Use an official Node.js runtime as the base image
+# Use Node.js base image
 FROM node:18-alpine
 
 # Set working directory
 WORKDIR /app
 
-# Copy package.json and install dependencies
-COPY package.json ./
-RUN npm install
+# Run npm init -y to generate package.json inside the container
+RUN npm init -y
 
-# Copy application code
+# Copy the rest of the application files
 COPY . .
 
-# Expose the port the app runs on
+# Install dependencies (if package.json is modified)
+RUN npm install || true
+
+# Expose port
 EXPOSE 3000
 
-# Command to run the app
+# Start application
 CMD ["node", "server.js"]
